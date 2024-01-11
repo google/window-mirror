@@ -1,4 +1,4 @@
-# Windowshare
+# WindowMirror
 
 Streaming windows via WebSockets peer-to-peer
 
