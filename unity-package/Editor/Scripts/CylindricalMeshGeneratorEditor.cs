@@ -1,4 +1,4 @@
-// <copyright file="ArcCylinderSpace.cs" company="Google LLC">
+// <copyright file="CylindricalMeshGeneratorEditor.cs" company="Google LLC">
 //
 // Copyright 2023 Google LLC
 //

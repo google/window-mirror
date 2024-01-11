@@ -1,6 +1,5 @@
-// shader that improve texture qulity rendering while overlay is absent 
-// this was suggested by XR-UX-Prototyping team
-// https://source.corp.google.com/h/team/arps-ux/XR-UX-Prototyping/+/main:SpatialUI/Assets/XRPrototyping/XRInteractionCore/Shaders/UIWithSuperSample.shader
+
+// shader that improves texture qulity rendering while overlay is absent 
 Shader "UI/SuperSample"
 {
     Properties
