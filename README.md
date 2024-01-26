@@ -22,10 +22,18 @@ streaming_client.py.
 and press enter. The window texture will open on an opencv window. Note that
 Only non-hardware-accelerated windows can be shared !!! \
 Some programs like Visual Studio Code or chrome can be run without hardware
-acceleration google it for more info
+acceleration, google it for more info
 
 TEST ACROSS TWO WINDOWS MACHINES ON THE SAME NETWORK
 
 6) Now that you tested it locally you can test it across two laptops on the same
 network Make sure both windows machine and the machine in which you run unity
 are in the same network and that the networks allows peer to peer communication.
+
+
+## Contributors
+
+ - **Riccardo Bovo (Imperial College London)** - Student Researcher at Google AR & VR 
+ - **Li-Te Cheng (Google AR & VR)** 
+ - **Mar Gonzalez-Franco (Google AR & VR)** 
+ - **Eric J Gonzalez (Google AR & VR)** 
