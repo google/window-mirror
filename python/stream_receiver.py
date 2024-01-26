@@ -102,7 +102,9 @@ class StreamReceiver:
     while self._running:
       try:
         # Receive size of metadata (window ID)
-        metadata_size_struct = connection.recv(struct.calcsize("<L"))
+        metadata_size_struct = self.receive_all(
+            connection, struct.calcsize("<L")
+        )
         metadata_size = struct.unpack("<L", metadata_size_struct)[0]
 
         # Receive the actual metadata (window ID)
@@ -129,6 +131,16 @@ class StreamReceiver:
         connection.close()
         self._used_slots -= 1
         break
+
+  def receive_all(self, sock, count):
+    buf = b""
+    while count:
+      newbuf = sock.recv(count)
+      if not newbuf:
+        return None
+      buf += newbuf
+      count -= len(newbuf)
+    return buf
 
   def _process_incoming_data(self, data, window_id, data_type):
 

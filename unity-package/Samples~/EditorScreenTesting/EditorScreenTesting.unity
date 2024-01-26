@@ -347,7 +347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cylinderSpace: {fileID: 1001907332}
   VRScreenComponent: {fileID: 1001907335}
-  divisionsPerDegree: 0.1
+  divisionsPerDegree: 1
   meshMaterial: {fileID: 2100000, guid: 3931ad97d9dda8141ab19f7e8b2f816e, type: 2}
 --- !u!4 &1001907331
 Transform:
@@ -412,7 +412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   receiver: {fileID: 1001907337}
   cylinderSpace: {fileID: 1001907332}
-  VRScreens: {fileID: 1001907335}
+  screens: {fileID: 1001907335}
   offset: 0.01
   divisionsPerDegree: 1
   meshMaterial: {fileID: 2100000, guid: 7cd1d613cc567014bb1e25b6819a36d7, type: 2}
@@ -431,8 +431,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1b3623e898b3c143a5afda68c49b694, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  editorGlobalScale: 0.0008
-  _VRScreens: []
+  vrScreenList: {fileID: 11400000, guid: af5d152980078954cad22a9cb6f4ec6e, type: 2}
 --- !u!114 &1001907336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,8 +472,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620bfdfe39d50e3409a324095ce008fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  globalscale: 0.0008
   receiver: {fileID: 1001907337}
-  VRScreens: {fileID: 1001907335}
+  Screens: {fileID: 1001907335}
   VRScreenPlacer: {fileID: 1001907333}
   cylindricalMeshGenerator: {fileID: 1001907330}
   cylindricalUiCollider: {fileID: 1001907334}

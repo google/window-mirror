@@ -17,13 +17,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System.Collections.Generic;
     using System.Linq;
     using UnityEngine;
 
-    ///< summary>
+    ///<summary>
     /// This class spatially organizes VRScreens on a 2D layout.
     ///</summary>
     public class VRScreenPlacer : MonoBehaviour
@@ -46,10 +46,10 @@ namespace Google.XR.WindowShare
         public float spacing = 0.2f;
         public float offset = -5.0f;
 
-        private GameObject hostingplane;
+        private GameObject _hostingplane;
 
         private float _averageRowWidth;
-        private List<List<VRScreens.VRScreen>> _bestDistribution = null;
+        private List<List<IVRScreen>> _bestDistribution = null;
         private float _bestScore = float.MaxValue;
 
         public void RefreshPlacement()
@@ -63,15 +63,15 @@ namespace Google.XR.WindowShare
             }
 
             // Delete all recorded planes
-            foreach (var vrs in VRScreensContainer.vrscreens)
+            foreach (var vrs in VRScreensContainer.list)
             {
-                if (vrs._2DPlane != null)
-                    DestroyImmediate(vrs._2DPlane);
+                if (vrs.plane2D != null)
+                    DestroyImmediate(vrs.plane2D);
             }
-            if (hostingplane != null)
-                DestroyImmediate(hostingplane);
+            if (_hostingplane != null)
+                DestroyImmediate(_hostingplane);
 
-            DistributeAndPlaceVRScreens(VRScreensContainer.vrscreens, hostingWidth);
+            DistributeAndPlaceVRScreens(VRScreensContainer.list, hostingWidth);
             if (displayHostingVRScreen)
             {
                 DisplayHostingVRScreen();
@@ -82,7 +82,7 @@ namespace Google.XR.WindowShare
             }
         }
 
-        public void DistributeAndPlaceVRScreens(List<VRScreens.VRScreen> rects, float hostingWidth)
+        public void DistributeAndPlaceVRScreens(List<IVRScreen> rects, float hostingWidth)
         {
             // 1. Calculate total width of all VRScreens
             float totalWidth = rects.Sum(r => r.Width());
@@ -91,7 +91,7 @@ namespace Google.XR.WindowShare
             // 2. Recursively try to form rows
             _bestDistribution = null;
             _bestScore = float.MaxValue;
-            TryFormRows(new List<VRScreens.VRScreen>(rects), new List<List<VRScreens.VRScreen>>());
+            TryFormRows(new List<IVRScreen>(rects), new List<List<IVRScreen>>());
 
             // 3. Place the VRScreens using the best distribution
             float totalRowsHeight = CalculateTotalRowsHeight(_bestDistribution);
@@ -103,8 +103,8 @@ namespace Google.XR.WindowShare
             }
         }
 
-        private void TryFormRows(List<VRScreens.VRScreen> remainingRects,
-                                 List<List<VRScreens.VRScreen>> currentDistribution)
+        private void TryFormRows(List<IVRScreen> remainingRects,
+                                 List<List<IVRScreen>> currentDistribution)
         {
             if (remainingRects.Count == 0)
             {
@@ -112,14 +112,14 @@ namespace Google.XR.WindowShare
                 if (currentScore < _bestScore)
                 {
                     _bestScore = currentScore;
-                    _bestDistribution = new List<List<VRScreens.VRScreen>>(currentDistribution);
+                    _bestDistribution = new List<List<IVRScreen>>(currentDistribution);
                 }
                 return;
             }
 
             for (int i = 1; i <= remainingRects.Count; i++)
             {
-                List<VRScreens.VRScreen> row = remainingRects.Take(i).ToList();
+                List<IVRScreen> row = remainingRects.Take(i).ToList();
                 if (row.Sum(r => r.Width()) <=
                     _averageRowWidth * 1.5)  // Allowing rows to be up to 50% longer than average
                 {
@@ -130,7 +130,7 @@ namespace Google.XR.WindowShare
             }
         }
 
-        private float CalculateScore(List<List<VRScreens.VRScreen>> distribution)
+        private float CalculateScore(List<List<IVRScreen>> distribution)
         {
             float deviationScore =
                 distribution.Sum(row => Mathf.Abs(row.Sum(r => r.Width()) - _averageRowWidth));
@@ -138,7 +138,7 @@ namespace Google.XR.WindowShare
             return deviationScore + rowCountScore * 1000;  // Weighting row count more heavily
         }
 
-        private void PlaceRow(List<VRScreens.VRScreen> row, float hostingWidth, float hostingHeight,
+        private void PlaceRow(List<IVRScreen> row, float hostingWidth, float hostingHeight,
                               float totalRowsHeight, int rowIndex)
         {
             float totalRowWidth = row.Sum(r => r.Width());
@@ -166,7 +166,7 @@ namespace Google.XR.WindowShare
             }
         }
 
-        float CalculateTotalRowsHeight(List<List<VRScreens.VRScreen>> allRows)
+        float CalculateTotalRowsHeight(List<List<IVRScreen>> allRows)
         {
             float totalRowsHeight = 0;
             for (int i = 0; i < allRows.Count; i++)
@@ -183,7 +183,7 @@ namespace Google.XR.WindowShare
 
         private void DisplayVRScreens()
         {
-            foreach (var r in VRScreensContainer.vrscreens)
+            foreach (var r in VRScreensContainer.list)
             {
                 var plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
                 plane.transform.parent = transform;
@@ -191,19 +191,19 @@ namespace Google.XR.WindowShare
                 plane.transform.localPosition =
                     new Vector3(r.X + r.Width() * 0.5f - hostingWidth * 0.5f, offset,
                                 hostingHeight * 0.5f - (r.Y + r.Height() * 0.5f));
-                r._2DPlane = plane;
+                r.plane2D = plane;
             }
         }
 
         private void DisplayHostingVRScreen()
         {
-            hostingplane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            hostingplane.transform.parent = transform;
-            hostingplane.transform.localScale =
+            _hostingplane = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            _hostingplane.transform.parent = transform;
+            _hostingplane.transform.localScale =
                 new Vector3(hostingWidth * 0.1f, 1, hostingHeight * 0.1f);
-            hostingplane.transform.localPosition =
+            _hostingplane.transform.localPosition =
                 new Vector3(0, offset - 0.01f, 0);  // Set Y to -0.01
-            var renderer = hostingplane.GetComponent<Renderer>();
+            var renderer = _hostingplane.GetComponent<Renderer>();
             renderer.material.color = Color.gray;
         }
     }

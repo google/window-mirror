@@ -17,13 +17,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System.Collections.Generic;
     using System.Diagnostics;
     using UnityEngine;
 
-    ///< summary>
+    ///<summary>
     /// Utility to create a curved mesh to draw screencast textures on.
     ///</summary>
     public class CylindricalMeshGenerator : MonoBehaviour
@@ -37,7 +37,7 @@ namespace Google.XR.WindowShare
         public void RefreshScreens()
         {
 
-            foreach (var rect in VRScreenComponent.vrscreens)
+            foreach (var rect in VRScreenComponent.list)
             {
 
                 Vector2[] corners = new Vector2[] { RemapNormalizedToArcSpace(rect.TopLeft()),
@@ -65,10 +65,10 @@ namespace Google.XR.WindowShare
                 meshFilter.mesh = GenerateMesh(corners);
                 meshRenderer.material = meshMaterial;  // Assign the material
 
-                if (rect.Tex != null)
+                if (rect.tex != null)
                 {
                     // update placement screen texture
-                    rect.screen.GetComponent<MeshRenderer>().material.mainTexture = rect.Tex;
+                    rect.screen.GetComponent<MeshRenderer>().material.mainTexture = rect.tex;
                 }
 
                 stopwatch.Stop();

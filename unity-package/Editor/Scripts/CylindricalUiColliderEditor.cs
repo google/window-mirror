@@ -17,12 +17,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using UnityEngine;
     using UnityEditor;
 
-    ///< summary>
+    ///<summary>
     /// This adds a button to the editor to initialize the cylindrical ui collider.
     ///</summary>
     [CustomEditor(typeof(CylindricalUiCollider))]

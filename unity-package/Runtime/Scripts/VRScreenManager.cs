@@ -17,43 +17,46 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
+
     using UnityEngine;
 
-    ///< summary>
+    ///<summary>
     /// This class dispatch the texture to the correct screen (VRScreen) and
     /// triggers replacement and mesh regeneration when needed (when a texture
     /// changes dimension)
     ///</summary>
     public class VRScreenManager : MonoBehaviour
     {
+        public float globalscale = 0.0008f;
         public Receiver receiver;
-        public VRScreens VRScreens;
+        public VRScreens Screens;
         public VRScreenPlacer VRScreenPlacer;
         public CylindricalMeshGenerator cylindricalMeshGenerator;
-        // public CylindricalLineGenerator cylindricalLineGenerator;
         public CylindricalUiCollider cylindricalUiCollider;
 
         void Start()
         {
+            Initialize();
+        }
+
+        protected void Initialize(){
+
             // Subscribe to the event emitted by Receiver
             receiver.OnImageDataReceived += HandleImageData;
-            // receiver.OnOCRDataReceived += HanldeOCRData;
 
             // if ui is on create ui collider
             if (cylindricalUiCollider != null)
             {
                 cylindricalUiCollider.Initialize();
             }
+
         }
 
-        void HandleImageData(string window_id, byte[] imageData)
+        protected virtual void HandleImageData(string window_id, byte[] imageData)
         {
-            VRScreens.VRScreen VRScreen = VRScreens.vrscreens.Find(rect => rect.id == window_id);
+            IVRScreen VRScreen = Screens.list.Find(rect => rect.id == window_id);
 
             Texture2D tex = new Texture2D(2, 2);
             tex.LoadImage(imageData);
@@ -63,8 +66,8 @@ namespace Google.XR.WindowShare
             if (VRScreen == null)
             {
                 // create a new rect and append
-                VRScreen = new VRScreens.VRScreen(tex.width, tex.height, window_id);
-                VRScreens.vrscreens.Add(VRScreen);
+                VRScreen = new VRScreen(tex.width, tex.height, window_id,globalscale);
+                Screens.list.Add(VRScreen);
                 update_placemnt = true;
             }
             else if (VRScreen.widthInPixels != tex.width || VRScreen.heightInPixels != tex.height)
@@ -83,28 +86,11 @@ namespace Google.XR.WindowShare
             }
 
             // update screen texture
-            VRScreen.Tex = tex;
+            VRScreen.tex = tex;
             VRScreen.screen.GetComponent<MeshRenderer>().material.mainTexture = tex;
         }
 
-        // void HanldeOCRData(string window_id, byte[] ocrData)
-        // {
-        //   VRScreens.VRScreen VRScreen = VRScreens.vrscreens.Find(rect => rect.id ==
-        //   window_id);
-
-        //   if (VRScreen == null)
-        //   {
-        //     return;
-        //   }
-        //   else
-        //   {
-        //     VRScreen.CleanChildVRScreens();
-        //     VRScreen.OCRRectangles =
-        //     OCRHandler.ExtractTextLineDataFromAltoXml(ocrData, VRScreen);
-        //     cylindricalLineGenerator.RefreshLines(VRScreen);
-        //   }
-        // }
-
+        
         private void OnDestroy()
         {
             receiver.OnImageDataReceived -= HandleImageData;

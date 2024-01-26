@@ -17,7 +17,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System.Collections;
     using System.Collections.Generic;

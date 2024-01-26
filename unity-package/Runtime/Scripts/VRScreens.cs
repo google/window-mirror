@@ -17,235 +17,116 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System.Collections.Generic;
+    using UnityEditor;
     using UnityEngine;
 
-    ///< summary>
-    /// This class represent the VR screens (size in px, size in world
-    /// coordinates,position, noormalized coordinates of the corners)
-    /// ///</summary>
+    ///<summary>
+    /// This manages the List<IVRScreen> which is the list containing
+    /// the VRScreen visible within the cylindrical space.
+    /// There are two ways to use this class.
+    /// Use the list setter to directly provide IVRScreens to manage.
+    /// Or use vrScreenListObject in the editor to provide a
+    /// gameobject containing a list of IVRScreens.
+    ///</summary>
     public class VRScreens : MonoBehaviour
     {
-
-        [System.Serializable]
-        public class VRScreen
-        {
-            public string id;
-            public string imageData;
-
-            public float widthInPixels;
-            public float heightInPixels;
-
-            public GameObject _2DPlane;
-            public GameObject screen;
-
-            public Texture2D Tex;
-
-            public float Width()
-            {
-                return _globalScale * widthInPixels;
-            }
-
-            public float Height()
-            {
-                return _globalScale * heightInPixels;
-            }
-
-            public float X;
-            public float Y;
-
-            // vector2(x,y) this functions
-            // first normalize transform to [angle,height] by dividing the
-            // value/VRScreenPlacer.hostingWidth (angle) and
-            // value/VRScreenPlacer.hostingHeight then transform to [-1, 1] range
-            // meaning the full range of the spatialcylinder
-            // [-angle/2,+angle/2][-height/2,height/2] range (2*value-1) so to centere
-            // in the cylindrical space finally asemble xs and ys in to corners
-
-            public Vector2 BottomLeft()
-            {
-                return new Vector2(2 * (X / VRScreenPlacer.hostingWidth) - 1,
-                                   2 * (Y / VRScreenPlacer.hostingHeight) - 1);
-            }
-
-            public Vector2 BottomRight()
-            {
-                return new Vector2(2 * ((X + Width()) / VRScreenPlacer.hostingWidth) - 1,
-                                   2 * (Y / VRScreenPlacer.hostingHeight) - 1);
-            }
-
-            public Vector2 TopLeft()
-            {
-                return new Vector2(2 * (X / VRScreenPlacer.hostingWidth) - 1,
-                                   2 * ((Y + Height()) / VRScreenPlacer.hostingHeight) - 1);
-            }
-
-            public Vector2 TopRight()
-            {
-                return new Vector2(2 * ((X + Width()) / VRScreenPlacer.hostingWidth) - 1,
-                                   2 * ((Y + Height()) / VRScreenPlacer.hostingHeight) - 1);
-            }
-
-            public VRScreen(float widthPx, float heightPx, string window_id)
-            {
-                widthInPixels = widthPx;
-                heightInPixels = heightPx;
-                id = window_id;
-            }
-
-            public void Dispose()
-            {
-                // Destroy associated GameObjects
-                if (_2DPlane != null)
-                    Destroy(_2DPlane);
-
-                if (screen != null)
-                    Destroy(screen);
-            }
-
-            // OCR related stuff
-            // public List<OCRRectangle> OCRRectangles = new List<OCRRectangle>();
-
-            // Method to denormalize OCRRectangles from normal coordinates within
-            // VRScreen to angular,height coordinates
-            // public OCRRectangle NormalizeChildVRScreen(OCRRectangle ocrRect)
-            // {
-
-            //   // Adjust the OCRRectangle's position and size within the hosting
-            //   // VRScreen
-            //   float normalizedHPos = (X + ocrRect.ImgNormalizedHPos * Width()) /
-            //                          VRScreenPlacer.hostingWidth;
-            //   float normalizedVPos = (Y + ocrRect.ImgNormalizedVPos * Height()) /
-            //                          VRScreenPlacer.hostingHeight;
-            //   float normalizedWidth =
-            //       ocrRect.ImgNormalizedWidth * Width() / VRScreenPlacer.hostingWidth;
-            //   float normalizedHeight = ocrRect.ImgNormalizedHeight * Height() /
-            //                            VRScreenPlacer.hostingHeight;
-
-            //   // Transform to [-1, 1] range
-            //   ocrRect.NormalizedBottomLeft =
-            //       new Vector2(2 * normalizedHPos - 1, 2 * normalizedVPos - 1);
-            //   ocrRect.NormalizedBottomRight = new Vector2(
-            //       2 * (normalizedHPos + normalizedWidth) - 1, 2 * normalizedVPos -
-            //       1);
-            //   ocrRect.NormalizedTopLeft = new Vector2(
-            //       2 * normalizedHPos - 1, 2 * (normalizedVPos + normalizedHeight) -
-            //       1);
-            //   ocrRect.NormalizedTopRight =
-            //       new Vector2(2 * (normalizedHPos + normalizedWidth) - 1,
-            //                   2 * (normalizedVPos + normalizedHeight) - 1);
-
-            //   return ocrRect;
-            // }
-
-            // Method to normalize OCRRectangles within this VRScreen
-            // public void CleanChildVRScreens()
-            // {
-            //   if (OCRRectangles.Count > 0)
-            //   {
-            //     foreach (OCRRectangle OCRRectangle in OCRRectangles)
-            //     {
-            //       if (OCRRectangle.OCRLineObject != null)
-            //       {
-            //         DestroyImmediate(OCRRectangle.OCRLineObject);
-            //       }
-            //     }
-            //   }
-            // }
-
-            public Vector2 ConvertUVToPixel(Vector2 uv)
-            {
-                // First, denormalize the UV coordinates back to angle and height within
-                // the VRScreen's space
-                float angle = (uv.x + 1) / 2 * VRScreenPlacer.hostingWidth;
-                float height = (uv.y + 1) / 2 * VRScreenPlacer.hostingHeight;
-
-                // Next, calculate the pixel coordinates relative to the VRScreen
-                float pixelX = widthInPixels - (angle - X) / _globalScale;
-                float pixelY = heightInPixels - (height - Y) / _globalScale;
-
-                return new Vector2(pixelX, pixelY);
-            }
-
-            // Method to check if a point (angle, height) is within any OCRRectangle
-            // public OCRRectangle IsPointInsideAnyOCRRectangle(Vector2 point)
-            // {
-            //   foreach (var OCRrect in OCRRectangles)
-            //   {
-            //     if (IsPointInsideOCRRectangle(OCRrect, point))
-            //     {
-            //       return OCRrect; // Point is inside this VRScreen
-            //     }
-            //   }
-            //   return null; // Point is not inside any VRScreen
-            // }
-
-            //   private bool IsPointInsideOCRRectangle(OCRRectangle rect, Vector2
-            //   point)
-            //   {
-            //     // Check if point is within the VRScreen bounds
-            //     Vector2 bottomLeft = rect.NormalizedBottomLeft;
-            //     Vector2 topRight = rect.NormalizedTopRight;
-
-            //     return point.x >= topRight.x && point.x <= bottomLeft.x &&
-            //            point.y >= topRight.y && point.y <= bottomLeft.y;
-            //   }
-        }
-
-        private static float _globalScale = 0.0008f;
-
-        [SerializeField]
-        private float editorGlobalScale = 0.0008f;  // This will be visible in the editor
-        public float EditorGlobalScale
+        [HideInInspector]
+        public List<IVRScreen> list
         {
             get {
-                return _globalScale;
+                return _list;
             }
             set {
-                _globalScale = value;
-                editorGlobalScale = value;
-            }
-        }
-
-        void OnValidate()  // This method is called whenever a value is changed in the
-                           // editor
-        {
-            _globalScale = editorGlobalScale;
-        }
-
-        public static float GlobalScale
-        {
-            get {
-                return _globalScale;
-            }
-        }
-
-        [SerializeField]
-        private List<VRScreen> _VRScreens = new List<VRScreen>();
-        public List<VRScreen> vrscreens
-        {
-            get {
-                return _VRScreens;
-            }
-            set {
-                // Call Dispose on any VRScreens that are in _VRScreens but not in value
-                foreach (var existingRect in _VRScreens)
+                // Call Dispose on any list that are in _list but not in value
+                foreach (var existingRect in _list)
                 {
                     if (!value.Contains(existingRect))
                     {
-                        existingRect.Dispose();
+                        Destroy(existingRect.plane2D);
+                        Destroy(existingRect.screen);
                     }
                 }
-                _VRScreens = value;
+                _list = value;
+            }
+        }
+
+        [HideInInspector]
+        public Object vrScreenListObject {
+            get {
+                    return _vrScreenListObject;
+                }
+            set {
+                    if (value != null && !(value is IVRScreenList))
+                    {
+                        Debug.LogError("The assigned object must implement the IVRScreenList interface.");
+                    }
+                    _vrScreenListObject = value;
+                }
+        }
+
+        private IVRScreenList _vrScreenList;
+        private List<IVRScreen> _list = new List<IVRScreen>();
+        private Object _vrScreenListObject;
+
+        public void LoadVRScreens()
+        {
+            AssignList();
+
+            if (_vrScreenList == null)
+            {
+                Debug.LogError("VRScreenList is not assigned!");
+                return;
+            }
+
+            foreach (IVRScreen screen in _vrScreenList.GetScreens())
+            {
+                list.Add(screen);
+
+                if (screen.textureData != null && screen.textureData.Length > 0)
+                {
+                    screen.tex = new Texture2D(2, 2);
+                    screen.tex.LoadImage(screen.textureData);
+                }
+            }
+        }
+
+        public void SaveVRScreens()
+        {
+            AssignList();
+
+            if (_vrScreenList == null)
+            {
+                Debug.LogError("VRScreenList is not assigned!");
+                return;
+            }
+
+            _vrScreenList.ClearScreens();
+            EncodeTextures();
+            _vrScreenList.SetScreens(_list);
+
+            // Save the changes to the scriptable object
+            EditorUtility.SetDirty(_vrScreenList as UnityEngine.Object);
+            AssetDatabase.SaveAssets();
+        }
+
+        private void EncodeTextures()
+        {
+            foreach (IVRScreen screen in _list)
+            {
+                if (screen.tex != null)
+                {
+                    screen.textureData = screen.tex.EncodeToJPG(); 
+                }
             }
         }
 
         // Method to check if a point (angle, height) is within any VRScreen
-        public VRScreen IsPointInsideAnyVRScreen(Vector2 point)
+        public IVRScreen IsPointInsideAnyVRScreen(Vector2 point)
         {
-            foreach (var VRScreen in _VRScreens)
+            foreach (var VRScreen in _list)
             {
                 if (IsPointInsideVRScreen(VRScreen, point))
                 {
@@ -255,7 +136,12 @@ namespace Google.XR.WindowShare
             return null;  // Point is not inside any VRScreen
         }
 
-        private bool IsPointInsideVRScreen(VRScreen rect, Vector2 point)
+        private void AssignList() {
+            // Cast the Object to the IVRScreenList interface
+            _vrScreenList = _vrScreenListObject as IVRScreenList;
+        }
+
+        private bool IsPointInsideVRScreen(IVRScreen rect, Vector2 point)
         {
             // Check if point is within the VRScreen bounds
             Vector2 bottomLeft = rect.BottomLeft();
@@ -263,6 +149,11 @@ namespace Google.XR.WindowShare
 
             return point.x >= bottomLeft.x && point.x <= topRight.x && point.y >= bottomLeft.y &&
                    point.y <= topRight.y;
+        }
+
+        void OnDestroy()
+        {
+            list.Clear();
         }
     }
 }

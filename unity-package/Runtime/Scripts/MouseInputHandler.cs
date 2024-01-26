@@ -17,23 +17,22 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using UnityEngine;
 
-    ///< summary>
+    ///<summary>
     /// Utility to capture mouse events and pass them to the uicollider for
     /// coordinates remapping.
     ///</summary>
     public class MouseInputHandler : MonoBehaviour
     {
         public CylindricalUiCollider uiCollider;
-
-        private float doubleClickTimeLimit = 0.25f;
-        private float lastLeftClickTime = -1f;
-
         public GameObject cursorPrefab;
-        private GameObject currentCursor;
+
+        private float _doubleClickTimeLimitSec = 0.25f;
+        private float _lastLeftClickTime = -1f;
+        private GameObject _currentCursor;
 
         void Update()
         {
@@ -42,11 +41,11 @@ namespace Google.XR.WindowShare
                 CheckRaycastHit(UIEventsTypes.LEFT_BUTTON_DOWN);
 
                 // Checking for double click
-                if (Time.time - lastLeftClickTime < doubleClickTimeLimit)
+                if (Time.time - _lastLeftClickTime < _doubleClickTimeLimitSec)
                 {
                     CheckRaycastHit(UIEventsTypes.LEFT_DOUBLE_CLICK);
                 }
-                lastLeftClickTime = Time.time;
+                _lastLeftClickTime = Time.time;
             }
 
             if (Input.GetMouseButtonDown(1))  // Right button down
@@ -66,7 +65,7 @@ namespace Google.XR.WindowShare
                 CheckRaycastHit(UIEventsTypes.SCROLL, (int)scroll);
             }
 
-            ContinuosCheckRaycastHit();
+            ContinuousCheckRaycastHit();
         }
 
         private void CheckRaycastHit(UIEventsTypes eventType, int value = 0)
@@ -80,25 +79,24 @@ namespace Google.XR.WindowShare
             }
         }
 
-        private void ContinuosCheckRaycastHit()
+        protected virtual void ContinuousCheckRaycastHit()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit))
             {
-                // uiCollider.HandleContinuousHit(hit.point);
                 UpdateCursorPosition(hit);
             }
         }
 
-        private void UpdateCursorPosition(RaycastHit hit)
+        protected void UpdateCursorPosition(RaycastHit hit)
         {
-            if (currentCursor == null)
+            if (_currentCursor == null)
             {
-                currentCursor = Instantiate(cursorPrefab);
+                _currentCursor = Instantiate(cursorPrefab);
             }
-            currentCursor.transform.position = hit.point;
+            _currentCursor.transform.position = hit.point;
         }
     }
 }

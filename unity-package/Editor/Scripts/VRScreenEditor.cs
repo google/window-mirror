@@ -1,4 +1,4 @@
-// <copyright file="CylindricalMeshGeneratorEditor.cs" company="Google LLC">
+// <copyright file="VRScreenEditor.cs" company="Google LLC">
 //
 // Copyright 2023 Google LLC
 //
@@ -22,21 +22,31 @@ namespace Google.XR.WindowMirror
     using UnityEngine;
     using UnityEditor;
 
+    [CustomEditor(typeof(VRScreens))]
     ///<summary>
-    /// This adds a button to the editor to refresh the cylindrical screens.
+    /// This loads VR screen data for testing within 
+    /// editor without receiver or playmode.
     ///</summary>
-    [CustomEditor(typeof(CylindricalMeshGenerator))]
-    public class CylindricalMeshGeneratorEditor : Editor
+    public class VRScreensEditor : Editor
     {
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
+            DrawDefaultInspector();
 
-            CylindricalMeshGenerator generator = (CylindricalMeshGenerator)target;
+            VRScreens vrScreens = (VRScreens)target;
 
-            if (GUILayout.Button("Refresh Screens"))
+            // Create a field where only objects implementing IVRScreenList can be assigned
+            vrScreens.vrScreenListObject = EditorGUILayout.ObjectField(
+                "VR Screen List", vrScreens.vrScreenListObject, typeof(ScriptableObject), true);
+
+            if (GUILayout.Button("Load VR Screens"))
             {
-                generator.RefreshScreens();
+                vrScreens.LoadVRScreens();
+            }
+
+            if (GUILayout.Button("Save VR Screens"))
+            {
+                vrScreens.SaveVRScreens();
             }
         }
     }

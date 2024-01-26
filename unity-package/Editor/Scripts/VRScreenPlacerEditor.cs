@@ -17,12 +17,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using UnityEngine;
     using UnityEditor;
 
-    ///< summary>
+    ///<summary>
     /// This adds a button to the editor to refresh VRScreen placement.
     ///</summary>
     [CustomEditor(typeof(VRScreenPlacer))]

@@ -1,7 +1,11 @@
 {
-    "name": "Google.XR.WindowShare.Runtime",
+    "name": "Google.XR.WindowMirror.Runtime",
     "rootNamespace": "",
-    "references": ["Unity.TextMeshPro"],
+    "references": [
+        "Unity.TextMeshPro",
+        "Unity.InputSystem",
+        "Unity.XR.Interaction.Toolkit"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

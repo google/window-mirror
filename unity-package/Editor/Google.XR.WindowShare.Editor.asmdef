@@ -1,8 +1,8 @@
 {
-    "name": "Google.XR.WindowShare.Editor",
+    "name": "Google.XR.WindowMirror.Editor",
     "rootNamespace": "",
     "references": [
-        "Google.XR.WindowShare.Runtime"
+        "Google.XR.WindowMirror.Runtime"
     ],
     "includePlatforms": [
         "Editor"

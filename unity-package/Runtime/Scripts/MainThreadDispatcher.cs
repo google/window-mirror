@@ -17,41 +17,41 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System.Collections.Generic;
     using UnityEngine;
     using System;
 
-    ///< summary>
+    ///<summary>
     /// This class queues events from asyncronous threads (i.e. websocket texture
     /// serializations) and dispatches them onto the main thread (i.e. thread where
     /// unity updates geometry and textures).
     ///</summary>
     public class MainThreadDispatcher : MonoBehaviour
     {
-        private static readonly Queue<Action> ExecuteOnMainThreadQueue = new Queue<Action>();
-        private static readonly List<Action> ExecuteCopiedQueue = new List<Action>();
+        private static readonly Queue<Action> _executeOnMainThreadQueue = new Queue<Action>();
+        private static readonly List<Action> _executeCopiedQueue = new List<Action>();
 
         private void Update()
         {
             // Lock the queue and transfer actions to the copied queue
-            lock (ExecuteOnMainThreadQueue)
+            lock (_executeOnMainThreadQueue)
             {
-                while (ExecuteOnMainThreadQueue.Count > 0)
+                while (_executeOnMainThreadQueue.Count > 0)
                 {
-                    ExecuteCopiedQueue.Add(ExecuteOnMainThreadQueue.Dequeue());
+                    _executeCopiedQueue.Add(_executeOnMainThreadQueue.Dequeue());
                 }
             }
 
             // Execute the copied actions
-            foreach (var action in ExecuteCopiedQueue)
+            foreach (var action in _executeCopiedQueue)
             {
                 action.Invoke();
             }
 
             // Clear the action list
-            ExecuteCopiedQueue.Clear();
+            _executeCopiedQueue.Clear();
         }
 
         public static void ExecuteOnMainThread(Action action)
@@ -61,9 +61,9 @@ namespace Google.XR.WindowShare
                 throw new ArgumentNullException("action");
             }
 
-            lock (ExecuteOnMainThreadQueue)
+            lock (_executeOnMainThreadQueue)
             {
-                ExecuteOnMainThreadQueue.Enqueue(action);
+                _executeOnMainThreadQueue.Enqueue(action);
             }
         }
     }

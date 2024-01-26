@@ -17,62 +17,51 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System;
     using TMPro;
     using UnityEngine;
-    // using UnityEngine.XR.Interaction.Toolkit;
 
-    ///< summary>
+    ///<summary>
     /// Utility to create a curved mesh representing the whole Cylindrical space to
     /// capture ui events using System.
     ///</summary>
     public class CylindricalUiCollider : MonoBehaviour
     {
+        protected GameObject uiCylinderSpace;
 
         public Receiver receiver;
         public ArcCylinderSpace cylinderSpace;
-        public VRScreens VRScreens;
+        public VRScreens screens;
         public float offset = -0.01f;  // Offset for the mesh
-
         public float divisionsPerDegree = 0.0f;
-        private GameObject uicylinderspace;
         public Material meshMaterial;
-
         public bool render;
-
         public TextMeshPro textcomponent;
-
         public bool displaytextbool;
-
-        [HideInInspector]
-        // public XRSimpleInteractable interactable;
 
         public void Initialize()
         {
             // generate gameobject
-            uicylinderspace = new GameObject("uicylinderspace");
-            uicylinderspace.transform.parent = gameObject.transform;
+            uiCylinderSpace = new GameObject("uiCylinderSpace");
+            uiCylinderSpace.transform.parent = gameObject.transform;
 
             // Add a MeshFilter and generate mesh
-            MeshFilter meshFilter = uicylinderspace.AddComponent<MeshFilter>();
+            MeshFilter meshFilter = uiCylinderSpace.AddComponent<MeshFilter>();
             meshFilter.mesh = GenerateColliderMesh();
 
             if (render)
             {
 
-                MeshRenderer meshRenderer = uicylinderspace.AddComponent<MeshRenderer>();
+                MeshRenderer meshRenderer = uiCylinderSpace.AddComponent<MeshRenderer>();
                 meshRenderer.material = meshMaterial;
             }
 
             // Add a MeshCollider component
-            MeshCollider meshCollider = uicylinderspace.AddComponent<MeshCollider>();
+            MeshCollider meshCollider = uiCylinderSpace.AddComponent<MeshCollider>();
             meshCollider.sharedMesh = meshFilter.mesh;
             meshCollider.enabled = true;
-
-            // Add interactable
-            // interactable = uicylinderspace.AddComponent<XRSimpleInteractable>();
         }
 
         private Mesh GenerateColliderMesh()
@@ -100,7 +89,7 @@ namespace Google.XR.WindowShare
             Vector2 uv = cylinderSpace.ConvertXYZToUV(point);
 
             // check if is inside of a VRScreen
-            var rect = VRScreens.IsPointInsideAnyVRScreen(uv);
+            var rect = screens.IsPointInsideAnyVRScreen(uv);
 
             if (rect != null)
             {
@@ -124,31 +113,5 @@ namespace Google.XR.WindowShare
             UIEvent uie = new UIEvent(eventType, ascii_keyCode);
             receiver.uIEventsQueue.Enqueue(uie);
         }
-
-        // public void HandleContinuousHit(Vector3 point)
-        // {
-
-        //   // Convert hit point to AngleHeight coordinates
-        //   Vector2 uv = cylinderSpace.ConvertXYZToUV(point);
-
-        //   // check if is inside of a VRScreen
-        //   var rect = VRScreens.IsPointInsideAnyVRScreen(uv);
-
-        //   if (rect != null)
-        //   {
-        //     // Debug.Log($"window_id:{rect.id}");
-
-        //     OCRRectangle OCR_Rect = rect.IsPointInsideAnyOCRRectangle(uv);
-
-        //     if (OCR_Rect != null)
-        //     {
-        //       if (displaytextbool)
-        //       {
-        //         Debug.Log(OCR_Rect.TextContent);
-        //         textcomponent.text = OCR_Rect.TextContent;
-        //       }
-        //     }
-        //   }
-        // }
     }
 }

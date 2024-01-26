@@ -17,7 +17,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System;
     using System.Collections.Generic;
@@ -28,28 +28,20 @@ namespace Google.XR.WindowShare
     using UnityEngine;
     using TMPro;
 
-    ///< summary>
+    ///<summary>
     /// This class receives the serialized image data via websokets.
     ///</summary>
     public class Receiver : MonoBehaviour
     {
         public string ipAddress = "127.0.0.1";
         public int port = 9999;
-
         public TextMeshPro text;
-
-        private TcpListener listener;
-
-        // Define an event to emit when new image data is received
+        public Queue<UIEvent> uIEventsQueue = new Queue<UIEvent>();
         public event Action<string, byte[]> OnImageDataReceived;
-
-        public event Action<string, byte[]> OnOCRDataReceived;
-
         public MainThreadDispatcher mainThreadDispatcher;
 
-        private TcpClient client;
-
-        public Queue<UIEvent> uIEventsQueue = new Queue<UIEvent>();
+        private TcpListener _listener;
+        protected TcpClient _client;
 
         void Start()
         {
@@ -61,9 +53,9 @@ namespace Google.XR.WindowShare
             ipAddress = GetLocalIPv4();
 #endif
 
-            listener = new TcpListener(IPAddress.Parse(ipAddress), port);
-            listener.Start();
-            listener.BeginAcceptTcpClient(HandleClient, null);
+            _listener = new TcpListener(IPAddress.Parse(ipAddress), port);
+            _listener.Start();
+            _listener.BeginAcceptTcpClient(HandleClient, null);
         }
 
         public string GetLocalIPv4()
@@ -89,7 +81,7 @@ namespace Google.XR.WindowShare
 
         void HandleClient(IAsyncResult ar)
         {
-            client = listener.EndAcceptTcpClient(ar);
+            _client = _listener.EndAcceptTcpClient(ar);
 
             Thread streamReader = new Thread(new ThreadStart(StreamReader));
 
@@ -102,8 +94,7 @@ namespace Google.XR.WindowShare
 
         private void StreamReader()
         {
-
-            NetworkStream stream = client.GetStream();
+            NetworkStream stream = _client.GetStream();
 
             while (true)
             {
@@ -154,19 +145,27 @@ namespace Google.XR.WindowShare
 
                 // Emit the event with window id and image data, but dispatch it to the
                 // main thread
-                MainThreadDispatcher.ExecuteOnMainThread(
-                    () =>
-                    {
-                        if (data_type == "frame")
-                        {
-                            OnImageDataReceived?.Invoke(window_id, data);
-                        }
-                        else if (data_type == "ocr")
-                        {
-                            OnOCRDataReceived?.Invoke(window_id, data);
-                        }
-                    });
+                EmitEvent(data_type, window_id, data);
             }
+        }
+
+        protected virtual void EmitEvent(string data_type, string window_id, byte[] data)
+        {
+
+            // Emit the event with window id and image data, but dispatch it to the
+            // main thread
+            MainThreadDispatcher.ExecuteOnMainThread(() =>
+                                                     {
+                                                         if (data_type == "frame")
+                                                         {
+                                                             RaiseOnImageDataReceived(window_id, data);
+                                                         }
+                                                     });
+        }
+
+        protected void RaiseOnImageDataReceived(string window_id, byte[] data)
+        {
+            OnImageDataReceived?.Invoke(window_id, data);
         }
 
         private void UiEventSender()
@@ -198,7 +197,7 @@ namespace Google.XR.WindowShare
                         }
 
                         IEnumerable<byte> combined = size.Concat(message);
-                        client.Client.Send(combined.ToArray());
+                        _client.Client.Send(combined.ToArray());
                     }
                 }
             }
@@ -212,7 +211,7 @@ namespace Google.XR.WindowShare
 
         private void OnApplicationQuit()
         {
-            listener.Stop();
+            _listener.Stop();
         }
     }
 }

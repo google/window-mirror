@@ -17,13 +17,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
 
-    ///< summary>
+    ///<summary>
     /// Utility to map between XYZ and coordinates on a curved screencast surface.
     ///</summary>
     public class ArcCylinderSpace : MonoBehaviour

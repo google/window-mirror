@@ -1,24 +1,19 @@
 {
-    "name": "com.google.xr.windowshare",
-    "displayName": "WindowShare",
+    "name": "com.google.xr.windowmirror",
+    "displayName": "WindowMirror",
     "version": "1.0.0",
     "unity": "2022.3",
     "description": "This lets users mirror multiple windows from a win laptop to Unity application.",
+    "licensesUrl":"https://www.apache.org/licenses/LICENSE-2.0",
     "author":
     {
-      "name": "XR team",
-      "email": "ar-harp@"
+      "name": "Google LLC"
     },
     "samples": [
       {
-        "displayName": "Editor Screen Testing",
+        "displayName": "EditorScreenTesting",
         "description": "Contains sample of the window mirror application that can be tested in the editor",
         "path": "Samples~/EditorScreenTesting"
-      },
-      {
-        "displayName": "Testing Screen Placement ",
-        "description": "Contains sample to test the Placement of VR screens",
-        "path": "Samples~/TestingScreenPlacement"
       }
     ],
     "dependencies": {

@@ -17,11 +17,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Google.XR.WindowShare
+namespace Google.XR.WindowMirror
 {
     using System;
 
-    ///< summary>
+    ///<summary>
     /// This class contains the types of UI events that can be sent to the.
     /// streaming application for simulation.
     ///</summary>
@@ -96,6 +96,7 @@ namespace Google.XR.WindowShare
         RIGHT_DOUBLE_CLICK = 8,   // cv2.EVENT_RBUTTONDBLCLK
         MIDDLE_DOUBLE_CLICK = 9,  // cv2.EVENT_MBUTTONDBLCLK
         SCROLL = 10,              // cv2.EVENT_MOUSEWHEEL
-        KEYSTROKE = -500
+        KEYSTROKE = 11,
+        OPEN_APPLICATION = 12
     }
 }

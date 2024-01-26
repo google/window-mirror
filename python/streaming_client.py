@@ -39,7 +39,8 @@ class StreamingClient:
     self.window_id = window_hwd
     self.fps = 3
     self.frame_time = 1.0 / self.fps
-
+    self.new_frame_avaliable = False
+    self._frame_changed = True
     self.prev_frame_hash = None
     self.window = WindowCapture(self.window_title)
 
@@ -92,13 +93,14 @@ class StreamingClient:
     """
 
     # check if a new frame is avaliable
-    if self.__has_frame_changed(frame):
+    self._frame_changed = self.__has_frame_changed(frame)
+
+    if self._frame_changed:
       _, frame = cv2.imencode(".jpg", frame, self.__encoding_parameters)
 
       try:
-        self.shared_connection.send_data(
-            self.window_id, frame.tobytes(), "frame"
-        )
+        self.shared_connection.send_data(self.window_id, frame.tobytes(),
+                                         "frame")
       except ConnectionResetError:
         self._running = False
       except ConnectionAbortedError:
@@ -155,27 +157,26 @@ class SharedConnectionClient:
       host: ip that the msule will connect to.
       port: port the module will connect to.
     """
-    self.__host = host
-    self.__port = port
+    self._host = host
+    self._port = port
     self.interaction_queue = queue.Queue()
     self.interaction_simulator = InteractionSimulator(self.interaction_queue)
     self.interaction_simulator_thread = threading.Thread(
-        target=self.interaction_simulator.process_queue
-    )
+        target=self.interaction_simulator.process_queue)
     self.interaction_simulator_thread.start()
     self.receive_data_thread = None
-    self.__client_socket = None
+    self._client_socket = None
     self._connect()
 
   def _connect(self, max_attempts=5, delay=2):
     """Handles connection and reconnection attempts."""
-    if self.__client_socket is not None:
-      self.__client_socket.close()
-    self.__client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    if self._client_socket is not None:
+      self._client_socket.close()
+    self._client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     attempts = 0
     while attempts < max_attempts:
       try:
-        self.__client_socket.connect((self.__host, self.__port))
+        self._client_socket.connect((self._host, self._port))
         print("Connection successful.")
         self._restart_receive_data_thread()
         return
@@ -187,10 +188,8 @@ class SharedConnectionClient:
 
   def _restart_receive_data_thread(self):
     """Restarts the data receiving thread."""
-    if (
-        self.receive_data_thread is not None
-        and self.receive_data_thread.is_alive()
-    ):
+    if (self.receive_data_thread is not None and
+        self.receive_data_thread.is_alive()):
       pass
     self.receive_data_thread = threading.Thread(target=self.__receive_data)
     self.receive_data_thread.start()
@@ -204,13 +203,17 @@ class SharedConnectionClient:
       data_type: ui event type being sent.
     """
     try:
+
+      if "ocr" in data_type:
+        print()
+
       size = len(data)
       metadata = f"{window_id}|{data_type}|{size}".encode()
 
       packed_metadata_size = struct.pack("<L", len(metadata))
 
       combined_data = packed_metadata_size + metadata + data
-      self.__client_socket.sendall(combined_data)
+      self._client_socket.sendall(combined_data)
     except OSError as e:
       print(f"An OSError occurred: {e}")
 
@@ -219,33 +222,38 @@ class SharedConnectionClient:
 
     while True:
       try:
-        size_struct = self.__client_socket.recv(struct.calcsize("<L"))
+        size_struct = self._client_socket.recv(struct.calcsize("<L"))
         data_size = struct.unpack("<L", size_struct)[0]
-        data = self.__client_socket.recv(data_size)
-        received_event = UIevent()
-        received_event.from_bytes(data)
+        data = self._client_socket.recv(data_size)
+        received_event = self._data_to_event(data)
         self.interaction_queue.put(received_event)
 
       except UnicodeDecodeError:
         print("Received data is not valid UTF-8 encoded data.")
       except IncomingStreamingError as e:
         print(f"Exception occurred: {e}")
-        self.__client_socket.close()
+        self._client_socket.close()
       except (ConnectionResetError, socket.error) as e:
         print(f"Connection error occurred: {e}")
         self._connect()
 
+  def _data_to_event(self, data):
+    """Method to close the connection."""
+    received_event = UIevent()
+    received_event.from_bytes(data)
+    return received_event
+
   def close(self):
     """Method to close the connection."""
-    self.__client_socket.close()
+    self._client_socket.close()
 
 
 class IncomingStreamingError(Exception):
   """Custom exception for streaming server."""
 
   def __init__(
-      self, message="the incoming streaming of serialized images had a problem"
-  ):
+      self,
+      message="the incoming streaming of serialized images had a problem"):
     self.message = message
     super().__init__(message)
 
