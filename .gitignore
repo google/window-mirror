@@ -1,0 +1,391 @@
+# Use glob syntax.
+syntax: glob
+
+# Use GoB for third party assets
+Assets/ThirdParty/
+
+# Unity generated
+[Bb]uilds/
+[Tt]emp/
+[Ll]ibrary/
+[Ll]ogs/
+[Oo]bj/
+[Uu]nityGenerated/
+manifest.json.backup*
+StyleCopViolations.xml.meta
+WSATestCertificate.pfx
+WSATestCertificate.pfx.meta
+UserSettings/
+NuGet*
+
+# UMB generated
+umb-bin/
+umb-logs/
+
+# Visual Studio files
+.vs/
+[Bb]uild/
+[Ee]xported[Oo]bj/
+.consulo/
+.idea/
+*.csproj
+*.unityproj
+*.sln*
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+*.vsconfig
+.vscode/
+
+# Logs
+sysinfo.txt
+crashlytics-build.properties
+
+# OS generated
+.gradle/
+.DS_Store*
+._*
+*.suo
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+[Dd]esktop.ini
+
+# Fig generated
+*.orig
+*.orig.meta
+
+# Unity debug symbols
+*_BackUpThisFolder_ButDontShipItWithYourGame/**
+
+# Unity ProjectSettings files that already have suitable defaults
+ProjectSettings/AndroidResolverDependencies.xml
+ProjectSettings/AudioManager.asset
+ProjectSettings/ClusterInputManager.asset
+ProjectSettings/DynamicsManager.asset
+ProjectSettings/GraphicsSettings.asset
+ProjectSettings/GvhProjectSettings.xml
+ProjectSettings/InputManager.asset
+ProjectSettings/MemorySettings.asset
+ProjectSettings/NavMeshAreas.asset
+ProjectSettings/NetworkManager.asset
+ProjectSettings/PackageManagerSettings.asset
+ProjectSettings/Physics2DSettings.asset
+ProjectSettings/PresetManager.asset
+ProjectSettings/QualitySettings.asset
+ProjectSettings/TagManager.asset
+ProjectSettings/TimeManager.asset
+ProjectSettings/VFXManager.asset
+ProjectSettings/VersionControlSettings.asset
+ProjectSettings/boot.config
+
+# Special case meta files.
+
+# BUILD files are specific to google3 so there are sometimes cases where the
+# corresponding BUILD.meta file isn't checked in. It should be harmless to
+# ignore BUILD.meta files.
+BUILD.meta
+
+# --- google3/experimental/humaninterface/unity/hgignore
+
+# Don't check in plugin binaries
+*.bundle
+
+*.apk
+*.zip
+*.orig.meta
+
+# Unity generated
+[Bb]uilds/
+[Tt]emp/
+[Ll]ibrary/
+[Ll]ogs/
+Packages/packages-lock.json
+ProjectSettings/Packages
+[Oo]bj/
+[Uu]nityGenerated/
+manifest.json.backup*
+StyleCopViolations.xml.meta
+WSATestCertificate.pfx
+WSATestCertificate.pfx.meta
+UserSettings/
+NuGet*
+
+# UMB generated
+umb-bin/
+umb-logs/
+
+# Never ignore Asset meta data
+![Aa]ssets/**/*.meta
+
+# Visual Studio files
+.vs/
+[Bb]uild/
+[Ee]xported[Oo]bj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln*
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+*.vsconfig
+.vscode/
+
+# Logs
+sysinfo.txt
+crashlytics-build.properties
+
+# OS generated
+.gradle/
+.DS_Store*
+._*
+*.suo
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+[Dd]esktop.ini
+*.orig
+
+# Asset store tools plugin
+[Aa]ssets/AssetStoreTools*
+
+# Anything in arcore_unity_sdk
+arcore_unity_sdk/
+
+# Third party assets that should be downloaded from a zip, not in google3
+Assets/Arch*
+Assets/Fonts
+Assets/Frames*
+Assets/MRTK*
+Assets/Oculus
+Assets/Plugins*
+Assets/Resources
+Assets/TextMesh*
+Assets/ThirdParty/
+LocalPackages/
+
+# Node modules
+node_modules
+
+# --- google3/experimental/assistant_lamda/bubble_char_app/.hgignore ---
+
+# Unity generated or ignored
+Assets/ThirdParty.meta
+Assets/ThirdParty/
+Assets/LocalOnly.meta
+Assets/LocalOnly/
+Assets/Plugins/iOS/AssistantUnityPlugin.framework.meta
+Assets/Plugins/iOS/AssistantUnityPlugin.framework/
+Assets/Plugins/iOS/YoutubeMusicUnityPlugin.framework.meta
+Assets/Plugins/iOS/YoutubeMusicUnityPlugin.framework/
+# Some artifacts are created here while building:
+Assets/AddressableAssetsData/
+Assets/StreamingAssets/
+Assets/StreamingAssets.meta
+Builds/
+Build/
+Temp/
+Library/
+Logs/
+obj/
+UserSettings/
+
+# Visual Studio / MonoDevelop generated
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.userprefs
+
+# Fig merge artefacts
+*.orig
+*.orig.meta
+
+# OS generated
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+#   For a library or package, you might want to ignore these files since the code is
+#   intended to run in multiple environments; otherwise, check them in:
+# .python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# poetry
+#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
+#   This is especially recommended for binary packages to ensure reproducibility, and is more
+#   commonly ignored for libraries.
+#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
+#poetry.lock
+
+# pdm
+#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
+#pdm.lock
+#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
+#   in version control.
+#   https://pdm.fming.dev/#use-with-ide
+.pdm.toml
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# PyCharm
+#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
+#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+#  and can be added to the global gitignore or merged into this file.  For a more nuclear
+#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+#.idea/
