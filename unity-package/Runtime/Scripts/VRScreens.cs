@@ -95,6 +95,7 @@ namespace Google.XR.WindowMirror
 
         public void SaveVRScreens()
         {
+           
             AssignList();
 
             if (_vrScreenList == null)
@@ -106,10 +107,11 @@ namespace Google.XR.WindowMirror
             _vrScreenList.ClearScreens();
             EncodeTextures();
             _vrScreenList.SetScreens(_list);
-
+#if UNITY_EDITOR
             // Save the changes to the scriptable object
             EditorUtility.SetDirty(_vrScreenList as UnityEngine.Object);
             AssetDatabase.SaveAssets();
+#endif
         }
 
         private void EncodeTextures()

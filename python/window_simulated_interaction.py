@@ -109,29 +109,24 @@ class InteractionSimulator:
     if event.is_valid():
       task = event.event_task()
       if task == ClickType.KEY_PRESS:
-        print("I shall perform a key_press")
         self.key_press(event.value)
       else:
         self.bring_to_foreground(event.window_id)
         if task == ClickType.MOUSE_CLICK:
-          print("I shall perform a mouse_click")
           self.mouse_click(
               event.window_id, event.x, event.y, event.button().name.lower()
           )
         elif task == ClickType.MOUSE_DOUBLE_CLICK:
-          print("I shall perform a mouse_double_click")
           self.mouse_double_click(
               event.window_id, event.x, event.y, event.button().name.lower()
           )
         elif task == ClickType.MOUSE_SCROLL:
-          print("I shall perform a mouse_scroll")
           self.mouse_scroll(event.window_id, event.x, event.y, event.value)
 
   def process_queue(self):
     """wait for the event observed to be produced."""
     while True:
       if not self.interaction_queue.empty():
-        print(len(self.interaction_queue.queue))
         event = self.interaction_queue.get()
         self.simulate_interaction_event(event)
         self.interaction_queue.task_done()

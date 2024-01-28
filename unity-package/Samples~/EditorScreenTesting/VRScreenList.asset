@@ -12,4 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b196bf119f961f44db2aa95f2bfc12f1, type: 3}
   m_Name: VRScreenList
   m_EditorClassIdentifier: 
-  vrScreens: []
+  vrScreens:
+  - id: 
+    widthInPixels: 800
+    heightInPixels: 800
+    X: 0.18399692
+    Y: 0.14000002
+    plane2D: {fileID: 0}
+    screen: {fileID: 0}
+    tex: {fileID: 0}
+    _globalScale: 0.0009
+    textureData: 
+  - id: 
+    widthInPixels: 800
+    heightInPixels: 600
+    X: 0.9539969
+    Y: 0.23000002
+    plane2D: {fileID: 0}
+    screen: {fileID: 0}
+    tex: {fileID: 0}
+    _globalScale: 0.0009
+    textureData: 
+  - id: 
+    widthInPixels: 900
+    heightInPixels: 1200
+    X: 1.7239969
+    Y: -0.03999996
+    plane2D: {fileID: 0}
+    screen: {fileID: 0}
+    tex: {fileID: 0}
+    _globalScale: 0.0009
+    textureData: 

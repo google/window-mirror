@@ -1,4 +1,4 @@
-# Windowmirror
+## python application
 
 Streaming windows via WebSockets peer-to-peer
 

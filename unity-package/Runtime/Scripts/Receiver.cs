@@ -205,8 +205,6 @@ namespace Google.XR.WindowMirror
             {
                 Debug.LogError("Error in UiEventSender" + ex.Message);
             }
-
-            Thread.Sleep(10);
         }
 
         private void OnApplicationQuit()

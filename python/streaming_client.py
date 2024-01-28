@@ -37,7 +37,7 @@ class StreamingClient:
     self.window_title = window_title
     self.shared_connection = shared_connection
     self.window_id = window_hwd
-    self.fps = 3
+    self.fps = 5
     self.frame_time = 1.0 / self.fps
     self.new_frame_avaliable = False
     self._frame_changed = True
@@ -203,10 +203,6 @@ class SharedConnectionClient:
       data_type: ui event type being sent.
     """
     try:
-
-      if "ocr" in data_type:
-        print()
-
       size = len(data)
       metadata = f"{window_id}|{data_type}|{size}".encode()
 
