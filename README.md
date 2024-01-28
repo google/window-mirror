@@ -55,16 +55,16 @@ If you use this software, in your research, please cite the following paper:
 ```bibtex
 
 @article{Smith2024,
-    author    = {John Smith and Jane Doe},
-    title     = {Innovative Approaches in AI Research},
-    journal   = {Journal of AI Research},
-    volume    = {10},
-    number    = {2},
-    pages     = {123-145},
-    year      = {2024},
-    publisher = {AI Publications},
-    doi       = {10.1234/aijr.2024.5678},
-    url       = {https://www.example.com/ai-paper}
+    author    = {},
+    title     = {},
+    journal   = {},
+    volume    = {},
+    number    = {},
+    pages     = {},
+    year      = {},
+    publisher = {},
+    doi       = {},
+    url       = {}
 }
 
 ```
