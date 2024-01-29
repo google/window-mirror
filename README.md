@@ -1,6 +1,10 @@
 # WindowMirror
 
-WindowMirror toolkit provides users with a simulated, extendedscreen real-estate. It allows users to interact with multiple desktopapplications in real-time within a XR environment. Our architecturehas two main modules:  a Unity package and a Python backend.WindowMirror supports traditional desktop interaction methods suchas mouse, and keyboard. 
+WindowMirror toolkit provides users with a simulated, extendedscreen real-estate. It allows users to interact with multiple desktopapplications in real-time within a XR environment. 
+WindowMirror supports traditional desktop interaction methods suchas mouse, and keyboard. 
+
+![Example Image](media/image_0.gif)
+![Example Image](media/image_1.gif)
 
 ## Instructions
 
@@ -46,6 +50,9 @@ python streaming_client.py
 
 ## System Architecture
 
+Our architecturehas two main modules: a Unity package and a Python backend. 
+
+
 ![Example Image](media/system.png)
 
 ## Cite
@@ -53,20 +60,14 @@ python streaming_client.py
 If you use this software, in your research, please cite the following paper:
 
 ```bibtex
-
-@article{Smith2024,
-    author    = {John Smith and Jane Doe},
-    title     = {Innovative Approaches in AI Research},
-    journal   = {Journal of AI Research},
-    volume    = {10},
-    number    = {2},
-    pages     = {123-145},
+@inproceedings{Bovo2024,
+    author    = {Riccardo Bovo and Eric J. Gonzalez and Li-Te Cheng and Mar Gonzalez-Franco},
+    title     = {WindowMirror: An Open-Source Toolkit to Bring Interactive Multi-Window Views into XR},
+    booktitle = {Proceedings of the IEEE VR Conference 2024},
     year      = {2024},
-    publisher = {AI Publications},
-    doi       = {10.1234/aijr.2024.5678},
-    url       = {https://www.example.com/ai-paper}
+    address   = {Florida},
+    url       = {https://github.com/google/window-mirror}
 }
-
 ```
 
 ## Contributors
