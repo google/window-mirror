@@ -1,6 +1,6 @@
 # WindowMirror
 
-WindowMirror toolkit provides users with a simulated, extendedscreen real-estate. It allows users to interact with multiple desktopapplications in real-time within a XR environment. 
+WindowMirror toolkit provides users with a simulated, extended screen real-estate. It allows users to interact with multiple desktopapplications in real-time within a XR environment. 
 WindowMirror supports traditional desktop interaction methods suchas mouse, and keyboard. 
 
 ![Example Image](media/image_0.gif)
